@@ -13,17 +13,16 @@ class Quote extends Model
         $this->belongsTo(Customer::class);
     }
 
-    public function product() {
-        $this->hasMany(Product::class);
+    public function quoteProducts() {
+        $this->hasMany(QuoteProducts::class);
     }
 
-    protected $casts = [
-        'productnames' => 'array'
-    ];
+    // protected $casts = [
+    //     'productnames' => 'array'
+    // ];
 
     protected $fillable = [
-        'customer_id',
         'quotename',
-        'productnames'
+        'customer_id',
     ];
 }

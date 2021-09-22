@@ -9,11 +9,10 @@ class Product extends Model
 {
     use HasFactory;
 
-    public function product(){
+    public function quoteproducts(){
         $this->belongsToMany(Quote::class);
     }
     protected $fillable = [
-        'quote_id',
         'productname',
         'description',
         'price'

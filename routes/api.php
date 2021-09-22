@@ -5,9 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\QuoteProductsController;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Quote;
+use App\Models\QuoteProducts;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,4 +51,13 @@ Route::prefix('/quotes')->group( function(){
     Route::get('/edit/{id}', [QuoteController::class, 'edit']);
     Route::post('/update/{id}', [QuoteController::class, 'update']);
     Route::delete('/delete/{id}', [QuoteController::class, 'destroy']);
+});
+
+Route::get('quoteproduct', [QuoteProductsController::class, 'index']);
+Route::prefix('/quoteproduct')->group( function(){
+    Route::get('/{id}', [QuoteProductsController::class, 'show']);
+    Route::post('/store', [QuoteProductsController::class, 'store']);
+    Route::get('/edit/{id}', [QuoteProductsController::class, 'edit']);
+    Route::post('/update/{id}', [QuoteProductsController::class, 'update']);
+    Route::delete('/delete/{id}', [QuoteProductsController::class, 'destroy']);
 });

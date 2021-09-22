@@ -14,7 +14,7 @@ class QuoteProductsController extends Controller
      */
     public function index()
     {
-        //
+        return QuoteProducts::all();
     }
 
     /**
@@ -35,7 +35,14 @@ class QuoteProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $quoteproducts = new QuoteProducts([
+            'quote_id' => request('quote_id'),
+            'product_id' => request('product_id'),
+            'quantity' => request('quantity')
+        ]);
+        $quoteproducts->save();
+
+        return response()->json('The customer successfully added');
     }
 
     /**
@@ -67,9 +74,10 @@ class QuoteProductsController extends Controller
      * @param  \App\Models\QuoteProducts  $quoteProducts
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, QuoteProducts $quoteProducts)
+    public function update(Request $request, $id)
     {
-        //
+        $quoteProducts = QuoteProducts::findOrFail($id);
+        $quoteProducts->update($request->all());
     }
 
     /**
@@ -78,8 +86,10 @@ class QuoteProductsController extends Controller
      * @param  \App\Models\QuoteProducts  $quoteProducts
      * @return \Illuminate\Http\Response
      */
-    public function destroy(QuoteProducts $quoteProducts)
+    public function destroy($id)
     {
-        //
+        $quoteProducts = QuoteProducts::findOrFail($id);
+        $quoteProducts->delete();
+        return response()->json('successfully deleted');
     }
 }

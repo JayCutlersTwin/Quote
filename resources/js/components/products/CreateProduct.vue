@@ -7,11 +7,6 @@
                     <input type="hidden" name="_token" :value="csrf">
 
                     <div class="form-group">
-                        <!-- <label for="quote_id">Quote ID</label>
-                        <select name="quote_id" id="quote_id" multiple required>
-                            <option v-for="">
-                            </option>
-                        </select> -->
 
                         <label for="productname">Product</label>
                         <input type="text" id="productname" class="form-control mb-2" v-model="formData.productname">
@@ -20,7 +15,7 @@
                         <input type="text" id="description" class="form-control mb-2" v-model="formData.description">
 
                         <label for="price">Price</label>
-                        <input type="text" id="price" class="form-control mb-2" v-model="formData.price">
+                        <input type="number" id="price" class="form-control mb-2" v-model="formData.price">
                     </div>
 
                     <button type="submit" class="btn btn-primary  mt-4">Add Product</button>

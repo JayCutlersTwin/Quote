@@ -17,9 +17,9 @@ class CreateQuotesTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->nullable();
             $table->string('quotename');
-            $table->json('productnames');
+            // $table->foreignId('quote_product_id')->nullable();
+            // $table->json('productnames');
         });
     }
 

@@ -14,9 +14,6 @@
                         <label for="customer">Customer</label>
                         <input type="text" id="customer" class="form-control" v-model="quote.customer_id">
 
-                        <label for="product">Products</label>
-                        <input type="text" id="product" class="form-control" v-model="quote.productnames">
-
                     </div>
 
                     <button type="submit" class="btn btn-success  mt-4">Update</button>
@@ -33,7 +30,6 @@
             this.axios.get(`/api/quotes/edit/${this.$route.params.id}`)
             .then((response) => {
                 this.quote = response.data;
-                // console.log(response.data);
             }).catch((errors) => {
                 console.log(errors)
             })

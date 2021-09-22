@@ -57,35 +57,23 @@ class QuoteController extends Controller
      */
     public function show($id)
     {
-        // $query = DB::TABLE('quotes')
-        // ->join('products', 'quotes.product_id', '=', 'products.id')
-        // ->join('customers', 'quotes.customer_id', '=', 'customers.id')
-        // ->select('quotes.customer_id', 'customers.firstname', 'customers.lastname', 'customers.email',
-        // 'quotes.quotename', 'products.id', 'products.productname', 'products.price', 'products.quantity')
-        // ->where('quotes.id', '=', $id)
-        // ->get();
 
         $queryCustomer = DB::TABLE('quotes')
         ->join('customers', 'quotes.customer_id', '=', 'customers.id')
-        ->select('quotes.customer_id', 'customers.firstname', 'customers.lastname', 'customers.email', 'quotes.quotename')
+        ->select('quotes.id', 'quotes.customer_id', 'customers.firstname', 'customers.lastname', 'customers.email', 'quotes.quotename')
         ->where('quotes.id', '=', $id)
         ->get();
 
-        // $queryProduct = DB::TABLE('quotes')
-        // ->join('products', 'quotes.productnames', '=', 'products.productname')
-        // ->select('products.id', 'products.productname', 'products.price')
-        // ->where('quotes.id', '=', $id)
-        // ->get();
-
-        $queryProduct = DB::TABLE('quotes')
-        ->join('products', 'quotes.product_id', '=', 'products.id')
-        ->select('products.id', 'quotes.productnames', 'products.price', 'products.description')
+        $queryQuoteProduct = DB::TABLE('quotes')
+        ->join('quote_products', 'quotes.id', '=', 'quote_products.quote_id')
+        ->join('products', 'quote_products.product_id', 'products.id')
+        ->select('quote_products.id', 'products.productname', 'products.description', 'products.price', 'quote_products.quantity')
         ->where('quotes.id', '=', $id)
         ->get();
 
         return response()->json([
             'customer' => $queryCustomer,
-            'products' => $queryProduct,
+            'quoteProduct' => $queryQuoteProduct,
     ]);
     }
 

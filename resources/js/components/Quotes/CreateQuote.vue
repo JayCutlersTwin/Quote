@@ -15,11 +15,6 @@
                                 {{ customer.id }} {{ customer.firstname }} {{ customer.lastname }}
                             </option>
                         </select>
-
-                        <label class="mt-4">Products: </label>
-                        <fieldset v-for="product in products" class="mt-2">
-                            <input type="checkbox" name="productnames[]" v-model="formData.productnames" :value="product.productname"> {{ product.productname }} <br>
-                        </fieldset>
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-4">Add Quote</button>
@@ -37,32 +32,22 @@ import axios from 'axios';
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
 
                 customers: [],
-                products: [],
                 formData: {
                     quotename: null,
                     customer_id: null,
-                    productnames: []
                 },
 
             }
         },
         mounted() {
             this.getCustomers();
-            this.getProducts();
+
         },
         methods: {
             getCustomers(){
                 axios.get('/api/customers')
                 .then((response) => {
                     this.customers = response.data;
-                }).catch((error) => {
-                        console.log(error);
-                    });
-            },
-            getProducts(){
-                axios.get('/api/products')
-                .then((response) => {
-                    this.products = response.data;
                 }).catch((error) => {
                         console.log(error);
                     });
