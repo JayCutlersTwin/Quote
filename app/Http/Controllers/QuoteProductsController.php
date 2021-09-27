@@ -42,7 +42,9 @@ class QuoteProductsController extends Controller
         ]);
         $quoteproducts->save();
 
-        return response()->json('The customer successfully added');
+        // $productData = new stdClass();
+
+        return response()->json('The product successfully added');
     }
 
     /**

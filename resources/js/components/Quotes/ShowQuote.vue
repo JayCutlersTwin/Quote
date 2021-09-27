@@ -9,7 +9,7 @@
                                 <p class="mb-2">are you sure you want to confirm this?</p>
                                 <div class="flex justify-center">
                                     <button type="button" name="button" class="btn btn-danger mr-1" @click="closeModal">No</button>
-                                    <button type="button" name="button" class="btn btn-success ml-1">Yes</button>
+                                    <button type="button" name="button" class="btn btn-success ml-1" @click="sendEmail">Yes</button>
                                 </div>
                             </div>
                         </div>
@@ -19,7 +19,7 @@
         </div>
 
         <div v-show="isModalFormVisible">
-            <div class="w-full h-full opacity-65 bg-white bg-opacity-75 m-minusLeftDown z-20 fixed" >
+            <div class="w-full h-full opacity-65 bg-white bg-opacity-75 m-minusLeftDown z-20 fixed">
                 <div class="bg-white">
                     <div class="border-2 rounded border-solid my-2 top-calcModalFormTop left-calcModalFormLeft fixed bg-white bg-opacity-100">
                         <div class="p-10">
@@ -93,25 +93,25 @@
                             <div class="p-3">
                                 <h3 class="mb-1">Add Products</h3>
                                 <button type="button" name="button" class="btn btn-success" @click="showModalForm">Add</button>
-                                <!-- <router-link :to="{ name: 'quotesProductCreate' }" class="btn btn-success">Add</router-link> -->
                             </div>
                         </div>
                     </div>
 
                     <div v-if="quotes.quoteProduct.length !== 0">
                         <div class="w-full flex flex-wrap">
-                            <div class="col-md-4 px-1" v-for="quote in quotes.quoteProduct">
+                            <div class="col-md-4 px-1" v-for="product in quotes.quoteProduct">
+                            <!-- <div class="col-md-4 px-1" v-for="product in sendData"> -->
                                 <div class="border-2 rounded border-solid my-2 w-full">
                                     <div class="w-full">
                                         <div class="flex justify-end mt-1">
-                                            <button type="button" name="button" class="btn btn-danger py-0.5 px-2 mr-2" @click="destroyQuoteProduct(quote.id)">X</button>
+                                            <button type="button" name="button" class="btn btn-danger py-0.5 px-2 mr-2" @click="destroyQuoteProduct(product.id)">X</button>
                                         </div>
                                         <div class="px-3 pb-3">
-                                            <h4 class="mb-2 text-xl text-center">{{ quote.productname }}</h4>
-                                            <p class="mb-2 leading-4 text-center">{{ quote.description }}</p>
-                                            <h6 class="mb-3 text-center">${{ quote.price }}</h6>
+                                            <h4 class="mb-2 text-xl text-center">{{ product.productname }}</h4>
+                                            <p class="mb-2 leading-4 text-center">{{ product.description }}</p>
+                                            <h6 class="mb-3 text-center">${{ product.price }}</h6>
                                             <div>
-                                                <quantityCounter v-model:input="quote.quantity" v-bind:quantity="quote.quantity" v-on:input="quote.quantity=$event" v-on:increment-quantity='quote.quantity++' v-on:decrement-quantity="quote.quantity--"></quantityCounter>
+                                                <quantityCounter v-model:input="product.quantity" v-bind:quantity="product.quantity" v-on:input="product.quantity=$event" v-on:increment-quantity='product.quantity++' v-on:decrement-quantity="product.quantity--"></quantityCounter>
                                             </div>
 
                                         </div>
@@ -168,18 +168,29 @@
                     quote_id: null,
                     product_id: null,
                     quantity: ""
-                }
+                },
+                sendData: [],
+                emailData: [],
             }
         },
         created(id) {
-            axios.get(`/api/quotes/${this.$route.params.id}`).then(response => {
-                this.quotes = response.data;
-            })
-            .catch(function() {
-                alert('cannot load quote Information')
-            });
+            this.getQuoteData(id);
         },
         methods: {
+            getQuoteData(id) {
+                axios.get(`/api/quotes/${this.$route.params.id}`).then(response => {
+                    this.quotes = response.data;
+                })
+                .catch(function() {
+                    alert('cannot load quote Information')
+                });
+            },
+            sendEmail() {
+                axios.get(`/email/${this.$route.params.id}`).then(response => {
+                    this.emailData = response.data;
+                    this.isModalVisible = false;
+                })
+            },
             showModal() {
                 this.isModalVisible = true;
             },
@@ -231,10 +242,16 @@
                     }
 
                     e.preventDefault();
-                    create();
+                    this.create();
             },
-
-            create() {
+            // create() {
+            //     this.sendData.push({ ...this.formData });
+            //     this.formData.quote_id = null;
+            //     this.formData.product_id = null;
+            //     this.formData.quantity = "";
+            //     // this.isModalFormVisible = false;
+            // },
+            create(id) {
                 axios.post('/api/quoteproduct/store', this.formData)
                 .then((response) => {
                     console.log('Quote Product Created');
@@ -242,6 +259,8 @@
                     this.formData.product_id = null;
                     this.formData.quantity = "";
                     // this.isModalFormVisible = false;
+                    // window.location.reload(true);
+                    this.getQuoteData(id);
                 })
                 .catch((error) => {
                     console.log(error)
@@ -262,9 +281,7 @@
             this.getQuote();
             this.getProduct();
         },
-        watch: {
-
-        },
+        watch: {},
         computed: {
             total: function(){
                 let totalArray = [];

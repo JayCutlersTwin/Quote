@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Mail\EmailQuote;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/email/{id}', [MailController::class, 'sendEmail']);
 
 Route::get('/{any?}', function () {
     return view('app');
