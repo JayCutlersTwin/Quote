@@ -46,10 +46,12 @@ Route::prefix('/products')->group( function(){
 Route::get('quotes', [QuoteController::class, 'index']);
 Route::prefix('/quotes')->group( function(){
     Route::get('/{id}', [QuoteController::class, 'show']);
+    Route::get('/send-mail', [QuoteController::class, 'sendCustomerEmail']);
     Route::post('/store', [QuoteController::class, 'store']);
     Route::get('/create', [QuoteController::class, 'getCNP']);
     Route::get('/edit/{id}', [QuoteController::class, 'edit']);
-    Route::post('/update/{id}', [QuoteController::class, 'update']);
+    Route::post('/update/{id}', [QuoteController::class, 'update']); // This singularly updates order_complete
+    Route::post('/updateEdit/{id}', [QuoteController::class, 'updateEdit']); // This updates all Quote columns except order_complete
     Route::delete('/delete/{id}', [QuoteController::class, 'destroy']);
 });
 

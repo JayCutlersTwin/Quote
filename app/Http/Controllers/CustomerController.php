@@ -72,7 +72,7 @@ class CustomerController extends Controller
         $customer = Customer::findOrFail($id);
 
         $quote = DB::table('quotes')
-        ->select('id','quotename')
+        ->select('id','quotename', 'order_complete')
         ->where('customer_id', '=', $id)
         ->get();
 

@@ -42,7 +42,7 @@
         },
         methods: {
             update() {
-                this.axios.post(`/api/quotes/update/${this.$route.params.id}`, this.quote)
+                this.axios.post(`/api/quotes/updateEdit/${this.$route.params.id}`, this.quote)
                     .then((response) => {
                         this.$router.push({
                             name: 'quotes'

@@ -18,6 +18,8 @@ class CreateQuotesTable extends Migration
             $table->timestamps();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->string('quotename');
+            $table->boolean('order_complete')->default(false);
+
             // $table->foreignId('quote_product_id')->nullable();
             // $table->json('productnames');
         });

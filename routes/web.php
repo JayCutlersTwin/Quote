@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Mail\EmailQuote;
+use App\Http\Controllers\QuoteController;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Quote;
+use App\Models\Product;
+use App\Models\Customer;
 
 
 /*
@@ -15,7 +20,16 @@ use App\Mail\EmailQuote;
 |
 */
 
-Route::get('/email/{id}', [MailController::class, 'sendEmail']);
+Route::get('/quotes/send-email', function (Quote $quote, Product $product, Customer $customer){
+    $admin = "admin@admin.com";
+
+    $quote = Quote::all();
+    $product = Product::all();
+    $customer = Customer::all();
+
+    Mail::to($admin)
+        ->send(new EmailQuote($quote, $product, $customer));
+});
 
 Route::get('/{any?}', function () {
     return view('app');

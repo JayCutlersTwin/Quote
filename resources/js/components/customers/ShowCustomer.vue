@@ -29,22 +29,39 @@
                 </div>
             </div>
 
-            <div class="border-2 rounded border-solid w-full m-2 inline-flex">
-                <div class="container p-4">
-                    <h2 class="font-bold text-lg text-center">Quotes</h2>
-                    <div class="p-2 flex justify-between" v-for="q in quote" :key="quote.id">
+            <table class="table-fixed border-2 rounded border-solid my-2">
+                <thead>
+                    <th class="w-1/3 text-left p-4">Quote Name</th>
+                    <th class="w-1/3 text-center p-4">Complete</th>
+                    <th class="w-1/3 p-4"></th>
+                </thead>
+                <tbody>
+                    <tr v-for="q in quote" :key="quote.id">
+                        <td class="text-left p-4">{{ q.quotename }}</td>
 
-                        <h6 class="self-center">
-                            {{ q.quotename }}
-                        </h6>
-                        <div>
-                            <router-link class="btn-sm btn-primary" :to="{ name: 'quotesShow', params: { id: q.id }}">View</router-link>
-                            <router-link class="btn-sm btn-primary" :to="{ name: 'quotesEdit', params: { id: q.id }}">Edit</router-link>
-                            <button class="btn-sm btn-danger" @click="destroyQuote(q.id)">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        <td class="text-center p-4">
+                            <div v-if="q.order_complete === 0">
+                                Order Incomplete
+                            </div>
+                            <div v-if="q.order_complete === 1">
+                                Order Complete
+                            </div>
+                        </td>
+
+                        <td class="text-right p-4">
+                            <div class="inline-block">
+                                <router-link class="btn btn-primary" :to="{ name: 'quotesShow', params: { id: q.id }}">View</router-link>
+                            </div>
+                            <div class="inline-block" v-if="q.order_complete === 0">
+                                <router-link class="btn btn-primary" :to="{ name: 'quotesEdit', params: { id: q.id }}">Edit</router-link>
+                                <button class="btn btn-danger" @click="destroyQuote(q.id)">Delete</button>
+                            </div>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
     </div>
 </template>

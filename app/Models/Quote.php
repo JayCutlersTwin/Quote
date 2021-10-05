@@ -17,12 +17,9 @@ class Quote extends Model
         $this->hasMany(QuoteProducts::class);
     }
 
-    // protected $casts = [
-    //     'productnames' => 'array'
-    // ];
-
     protected $fillable = [
         'quotename',
         'customer_id',
+        'order_complete',
     ];
 }

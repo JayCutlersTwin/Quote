@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\QuoteProducts;
+use App\Models\Customers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class QuoteProductsController extends Controller
 {
@@ -35,16 +37,21 @@ class QuoteProductsController extends Controller
      */
     public function store(Request $request)
     {
-        $quoteproducts = new QuoteProducts([
-            'quote_id' => request('quote_id'),
-            'product_id' => request('product_id'),
-            'quantity' => request('quantity')
-        ]);
-        $quoteproducts->save();
+        // dd($request);
 
-        // $productData = new stdClass();
+        for($i=0; $i < $request[$i]; $i++) {
 
-        return response()->json('The product successfully added');
+            $quoteproducts = new QuoteProducts([
+
+                'quote_id' => $request[$i]['quote_id'],
+                'product_id' => $request[$i]['product_id'],
+                'quantity' => $request[$i]['quantity']
+
+            ]);
+            $quoteproducts->save();
+        }
+
+        return response()->json("The Products have been successfully added");
     }
 
     /**

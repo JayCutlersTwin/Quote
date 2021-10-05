@@ -11,40 +11,41 @@
                     <div class="card-body">
                         <div class="container mx-auto">
                             <div class="border-2 rounded border-solid">
-                                <div class="container mx-auto">
 
                                     <div class="alert alert-success" v-show="success">Customer created successfully.</div>
 
                                     <table class="table-auto w-full text-center">
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Address</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
+                                                <th class="p-2">Name</th>
+                                                <th class="p-2">Address</th>
+                                                <th class="p-2">Email</th>
+                                                <th class="p-2">Phone</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="customer in customers" :key="customer.id">
-                                                <td>{{ customer.firstname }} {{ customer.lastname }}</td>
-                                                <td>
+                                                <td class="p-2">{{ customer.firstname }} {{ customer.lastname }}</td>
+                                                <td class="p-2">
                                                     {{ customer.streetname }},<br>
                                                     {{ customer.city }},<br>
                                                     {{ customer.postcode }}
                                                 </td>
-                                                <td>{{ customer.email }}</td>
-                                                <td>{{ customer.phone }}</td>
-                                                <td><router-link :to="{ name: 'customersShow', params: { id: customer.id }}">View</router-link></td>
-                                                <td><router-link :to="{ name: 'customersEdit', params: { id: customer.id }}">Edit</router-link></td>
-                                                <td>
+                                                <td class="p-2">{{ customer.email }}</td>
+                                                <td class="p-2">{{ customer.phone }}</td>
+                                                <td class="p-2">
+                                                    <div>
+                                                        <router-link class="btn btn-primary inline-block" :to="{ name: 'customersShow', params: { id: customer.id }}">View</router-link>
+                                                        <router-link class="btn btn-primary inline-block" :to="{ name: 'customersEdit', params: { id: customer.id }}">Edit</router-link>
                                                         <input type="hidden" name="_token" :value="csrf">
-                                                        <button class="btn btn-danger" @click="destroyCustomer(customer.id)">Delete</button>
+                                                        <button class="btn btn-danger inline-block" @click="destroyCustomer(customer.id)">Delete</button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
 
-                                </div>
                             </div>
                         </div>
                     </div>

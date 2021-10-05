@@ -6,7 +6,7 @@
                     <div class="card-header">Home</div>
 
                     <div class="card-body">
-                        I'm an Home component.
+                        This is the Home Page
                     </div>
                 </div>
             </div>
