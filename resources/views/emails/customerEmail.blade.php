@@ -1,12 +1,27 @@
 @component('mail::message')
-#Customer {{ customer.id }} {{ customer.firstname }} {{ customer.lastname }}
 
-*QuoteName* Overview
+{{ $quote[0]->firstname }} {{ $quote[0]->lastname }}
 
-*Product list* *Quantities* *Price*
+@foreach($quote as $Q)
 
-*Totals*
+Product: {{ $Q->productname }}, <br>
+Quantity: {{ $Q->quantity }}, <br>
+Price each: {{ $Q-> price }}
+
+@endforeach
+
+@php
+    $totals = array();
+
+    for ($i=0; $i < count($quote); $i++) {
+        array_push($totals, $quote[$i]->price * $quote[$i]->quantity);
+
+    }
+    $Done = array_sum($totals);
+@endphp
+
+Total: ${{ $Done }}
 
 Thanks, <br>
-Building Co.
+{{ config('app.name') }}
 @endcomponent

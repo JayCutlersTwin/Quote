@@ -37,6 +37,16 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'streetname' => 'required',
+            'city' => 'required',
+            'postcode' => 'required',
+            'email' => 'required|unique:customers|regex:/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/',
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+        ]);
+
         $customer = new Customer([
             'firstname' => $request->input('firstname'),
             'lastname' => $request->input('lastname'),
@@ -48,15 +58,7 @@ class CustomerController extends Controller
         ]);
         $customer->save();
 
-        // $request->validate([
-        //     'firstname' => 'required',
-        //     'lastname' => 'required',
-        //     'streetname' => 'required',
-        //     'city' => 'required',
-        //     'postcode' => 'required',
-        //     'email' => ['required', 'regex:/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/', Rule::unique('companies', 'email')],
-        //     'phone' => 'required'
-        // ]);
+
 
         return response()->json('The customer successfully added');
     }
@@ -104,6 +106,17 @@ class CustomerController extends Controller
     public function update($id, Request $request)
     {
         $customer = Customer::findOrFail($id);
+
+        $this->validate($request, [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'streetname' => 'required',
+            'city' => 'required',
+            'postcode' => 'required',
+            'email' => 'required|regex:/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/',
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+        ]);
+
         $customer->update($request->all());
 
         return response()->json('The book successfully updated');
@@ -122,18 +135,4 @@ class CustomerController extends Controller
         return response()->json('successfully deleted');
 
     }
-    // protected function validateCustomer(?Customer $customer = null): array
-    // {
-    //     $customer ??= new Customer();
-    //
-    //     return request()->validate([
-    //         'firstname' => 'required',
-    //         'lastname' => 'required',
-    //         'streetname' => 'required',
-    //         'city' => 'required',
-    //         'postcode' => 'required',
-    //         'email' => ['required', 'regex:/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/', Rule::unique('customers', 'email')->ignore($customer)],
-    //         'phone' => 'required',
-    //     ]);
-    // }
 }

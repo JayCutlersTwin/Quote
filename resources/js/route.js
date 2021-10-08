@@ -1,4 +1,5 @@
 import Home from './components/Home';
+import NotFound from './components/NotFound';
 
 import Quotes from './components/Quotes';
 import ShowQuote from './components/Quotes/ShowQuote';
@@ -14,31 +15,20 @@ import Products from './components/Products';
 import EditProduct from './components/Products/EditProduct';
 import CreateProduct from './components/Products/CreateProduct';
 
-import EditQuoteProduct from './components/quoteProducts/EditQuoteProduct';
-import CreateQuoteProduct from './components/quoteProducts/CreateQuoteProduct';
-
 export default {
 
     mode:'history',
 
     routes: [
         {
+            path: '*',
+            component: NotFound
+        },
+        {
             name: 'home',
             path: '/',
             component: Home
         },
-
-        {
-            name: 'quoteProductEdit',
-            path: '/quoteproduct/edit/:id',
-            component: EditQuoteProduct
-        },
-        {
-            name: 'quotesProductCreate',
-            path: '/quoteproduct/create',
-            component: CreateQuoteProduct
-        },
-
 
         //Quotes
 

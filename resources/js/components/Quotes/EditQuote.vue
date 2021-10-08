@@ -11,8 +11,13 @@
                         <label for="quotename">Quote Name </label>
                         <input type="text" id="quotename" class="form-control" v-model="quote.quotename">
 
-                        <label for="customer">Customer</label>
-                        <input type="text" id="customer" class="form-control" v-model="quote.customer_id">
+                        <div v-if="this.errors.quotename !== 0">
+                            <div v-for="error in this.errors.quotename">
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -37,7 +42,8 @@
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                quote: {}
+                quote: {},
+                errors: []
             }
         },
         methods: {
@@ -46,7 +52,10 @@
                     .then((response) => {
                         this.$router.push({
                             name: 'quotes'
-                        });
+                        })
+                    })
+                    .catch((error) => {
+                        this.errors =  error.response.data.errors;
                     });
             }
         }

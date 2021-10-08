@@ -25,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command(SendEodEmail::class)->daily();
+        $schedule->command('EodReminder:emails')
+        ->dailyAt('17:00');
     }
 
     /**

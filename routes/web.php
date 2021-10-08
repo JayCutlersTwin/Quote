@@ -3,32 +3,37 @@
 use Illuminate\Support\Facades\Route;
 use App\Mail\EmailQuote;
 use App\Http\Controllers\QuoteController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Quote;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\QuoteProducts;
 
+Route::get('/quotes/send-email/{id}', function (Quote $quote, $id){
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+    $customerID = DB::table('quotes')
+    ->join('customers', 'quotes.customer_id', 'customers.id')
+    ->select('customer_id')
+    ->where('quotes.id', '=', $id)
+    ->get();
 
-Route::get('/quotes/send-email', function (Quote $quote, Product $product, Customer $customer){
-    $admin = "admin@admin.com";
+    $quote = DB::table('customers')
+    ->join('quotes', 'customers.id', '=', 'quotes.customer_id')
+    ->join('quote_products', 'quotes.id', '=', 'quote_products.quote_id')
+    ->join('products', 'quote_products.product_id', '=', 'products.id')
+    ->select('*')
+    ->where('customers.id', '=', $customerID[0]->customer_id)
+    ->where('quotes.id', '=', $id)
+    ->get();
 
-    $quote = Quote::all();
-    $product = Product::all();
-    $customer = Customer::all();
+    $customerEmail = DB::table('customers')
+    ->select('email')
+    ->where('id', '=', $customerID[0]->customer_id)
+    ->get();
 
-    Mail::to($admin)
-        ->send(new EmailQuote($quote, $product, $customer));
+    Mail::to($customerEmail)
+        ->send(new EmailQuote($quote));
 });
 
 Route::get('/{any?}', function () {

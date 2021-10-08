@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Customer;
-use App\Models\Quote;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\cronEmail;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class sendEodEmail extends Command
 {
@@ -20,14 +22,14 @@ class sendEodEmail extends Command
      *
      * @var string
      */
-    protected $description = 'Send email notification to user about the end of day quote';
+    protected $description = 'Send email notification to Admin about the end of day quote';
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(Customer $customer, Quote $quotes)
+    public function __construct()
     {
         parent::__construct();
     }
@@ -40,5 +42,12 @@ class sendEodEmail extends Command
     public function handle()
     {
 
+        $quote = DB::table('quotes')
+        ->join('customers', 'quotes.customer_id', 'customers.id')
+        ->whereDate('quotes.created_at', Carbon::today())
+        ->get();
+
+        Mail::to('admin@admin.com')
+        ->send(new cronEmail($quote));
     }
 }

@@ -43,40 +43,6 @@
                         </table>
                     </div>
 
-                    <!-- <div class="card-body" v-for="quote in quotes" :key="quote.id">
-                        <div class="container mx-auto">
-                            <div class="container mx-auto inline-block p-2 w-full border-2 rounded border-solid relative">
-                                <div class="float-left text-lg">
-                                    <h4 class="">{{ quote.quotename}}</h4>
-                                </div> -->
-                                <!-- <div class="float-right">
-                                    <router-link class="btn-sm btn-primary" :to="{ name: 'quotesShow', params: { id: quote.id }}">View</router-link>
-                                    <router-link class="btn-sm btn-primary" :to="{ name: 'quotesEdit', params: { id: quote.id }}">Edit</router-link>
-                                    <button class="btn-sm btn-danger" @click="destroyQuote(quote.id)">Delete</button>
-                                </div> -->
-                                <!-- <div class="float-right">
-                                    <div>
-                                        <div class="inline-block">
-                                            <div class="inline-block" v-if="quote.order_complete === 0">
-                                                X
-                                            </div>
-                                            <div class="inline-block" v-if="quote.order_complete === 1">
-                                                Order Complete
-                                            </div>
-                                        </div>
-                                        <div class="inline-block">
-                                            <router-link class="btn-sm btn-primary" :to="{ name: 'quotesShow', params: { id: quote.id }}">View</router-link>
-                                        </div>
-                                        <div class="inline-block" v-if="quote.order_complete === 0">
-                                            <router-link class="btn-sm btn-primary" :to="{ name: 'quotesEdit', params: { id: quote.id }}">Edit</router-link>
-                                            <button class="btn-sm btn-danger" @click="destroyQuote(quote.id)">Delete</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-
                 </div>
             </div>
         </div>
@@ -96,7 +62,8 @@ export default {
 
     methods: {
         getQuotes(){
-            axios.get('/api/quotes').then(response => {
+            axios.get('/api/quotes')
+            .then(response => {
                 this.quotes = response.data
             });
         },

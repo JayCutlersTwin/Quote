@@ -1,14 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-namespace App\Mail;
 
 use App\Models\Quote;
 use App\Models\Product;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class QuoteController extends Controller
 {
@@ -19,7 +17,12 @@ class QuoteController extends Controller
      */
     public function index()
     {
-        return Quote::all();
+        $quotes = DB::table('quotes')
+        ->select('*')
+        ->orderBy('quotes.updated_at', 'desc')
+        ->get();
+
+        return $quotes;
     }
 
     /**
@@ -40,10 +43,14 @@ class QuoteController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'customer_id' => 'required',
+            'quotename' => 'required'
+        ]);
+
         $quote = new Quote([
             'customer_id' => request('customer_id'),
             'quotename' => request('quotename'),
-            'productnames' => request('productnames')
         ]);
         $quote->save();
 
@@ -100,8 +107,13 @@ class QuoteController extends Controller
      */
     public function updateEdit(Request $request, $id)
     {
-        // dd($request['order_complete'][0]);
+
         $quote = Quote::findOrFail($id);
+
+        $this->validate($request, [
+            'quotename' => 'required'
+        ]);
+
         $quote->update($request->all());
 
         return response()->json('The quote has successfully updated');
@@ -116,7 +128,6 @@ class QuoteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request['order_complete'][0]);
         $quote = Quote::findOrFail($id);
         $quote->update([
             'order_complete' => $request['order_complete'][0],
@@ -136,13 +147,5 @@ class QuoteController extends Controller
         $quote = Quote::findOrFail($id);
         $quote->delete();
         return response()->json('successfully deleted');
-    }
-
-    public function sendCustomerEmail(){
-        $admin = "admin@admin.com";
-
-        Mail::to($admin)
-            ->send(new EmailQuote($quote));
-
     }
 }

@@ -29,38 +29,43 @@
                 </div>
             </div>
 
-            <table class="table-fixed border-2 rounded border-solid my-2">
-                <thead>
-                    <th class="w-1/3 text-left p-4">Quote Name</th>
-                    <th class="w-1/3 text-center p-4">Complete</th>
-                    <th class="w-1/3 p-4"></th>
-                </thead>
-                <tbody>
-                    <tr v-for="q in quote" :key="quote.id">
-                        <td class="text-left p-4">{{ q.quotename }}</td>
+            <div v-if="this.quote.length !== 0">
+                <table class="table-fixed border-2 rounded border-solid my-2">
+                    <thead>
+                        <th class="w-1/3 text-left p-4">Quote Name</th>
+                        <th class="w-1/3 text-center p-4">Complete</th>
+                        <th class="w-1/3 p-4"></th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="q in quote" :key="quote.id">
+                            <td class="text-left p-4">{{ q.quotename }}</td>
 
-                        <td class="text-center p-4">
-                            <div v-if="q.order_complete === 0">
-                                Order Incomplete
-                            </div>
-                            <div v-if="q.order_complete === 1">
-                                Order Complete
-                            </div>
-                        </td>
+                            <td class="text-center p-4">
+                                <div v-if="q.order_complete === 0">
+                                    Order Incomplete
+                                </div>
+                                <div v-if="q.order_complete === 1">
+                                    Order Complete
+                                </div>
+                            </td>
 
-                        <td class="text-right p-4">
-                            <div class="inline-block">
-                                <router-link class="btn btn-primary" :to="{ name: 'quotesShow', params: { id: q.id }}">View</router-link>
-                            </div>
-                            <div class="inline-block" v-if="q.order_complete === 0">
-                                <router-link class="btn btn-primary" :to="{ name: 'quotesEdit', params: { id: q.id }}">Edit</router-link>
-                                <button class="btn btn-danger" @click="destroyQuote(q.id)">Delete</button>
-                            </div>
-                        </td>
+                            <td class="text-right p-4">
+                                <div class="inline-block">
+                                    <router-link class="btn btn-primary" :to="{ name: 'quotesShow', params: { id: q.id }}">View</router-link>
+                                </div>
+                                <div class="inline-block" v-if="q.order_complete === 0">
+                                    <router-link class="btn btn-primary" :to="{ name: 'quotesEdit', params: { id: q.id }}">Edit</router-link>
+                                    <button class="btn btn-danger" @click="destroyQuote(q.id)">Delete</button>
+                                </div>
+                            </td>
 
-                    </tr>
-                </tbody>
-            </table>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div v-else>
+                <h2 class="text-center">You have no quotes to view!</h2>
+            </div>
 
         </div>
     </div>
@@ -86,8 +91,9 @@
                     this.customer = response.data.customer;
                     this.quote = response.data.quotes;
                 })
-                .catch(function () {
-                    alert('cannot load customer Information')
+                .catch((error) => {
+                    console.log(error.response)
+                    this.$router.push({name: 'customers'});
                 });
             },
             destroyQuote(id) {

@@ -3,6 +3,7 @@
         <h3 class="text-center">Add a Product</h3>
         <div class="row justify-center">
             <div class="col-md-6">
+
                 <form method="post" @submit.prevent="create">
                     <input type="hidden" name="_token" :value="csrf">
 
@@ -11,11 +12,36 @@
                         <label for="productname">Product</label>
                         <input type="text" id="productname" class="form-control mb-2" v-model="formData.productname">
 
+                        <div v-if="this.errors !== 0">
+                            <div v-for="error in this.errors.productname">
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+
                         <label for="description">Description</label>
                         <input type="text" id="description" class="form-control mb-2" v-model="formData.description">
 
+                        <div v-if="this.errors !== 0">
+                            <div v-for="error in this.errors.description">
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+
                         <label for="price">Price</label>
                         <input type="number" id="price" class="form-control mb-2" v-model="formData.price">
+
+                        <div v-if="this.errors !== 0">
+                            <div v-for="error in this.errors.price">
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <button type="submit" class="btn btn-primary  mt-4">Add Product</button>
@@ -35,7 +61,8 @@ import axios from 'axios';
                     productname: "",
                     description: "",
                     price: "",
-                }
+                },
+                errors: []
             }
         },
         mounted() {
@@ -52,7 +79,7 @@ import axios from 'axios';
                         name: 'products'
                     });
                 }).catch((error) => {
-                    console.log(error)
+                    this.errors =  error.response.data.errors;
                 });
             }
         }

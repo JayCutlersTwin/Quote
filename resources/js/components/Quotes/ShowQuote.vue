@@ -26,7 +26,9 @@
 
                             <p v-if="this.lengthOfErrors === true">
                                 <b>Please correct the following error(s):</b>
-                                <h6 v-for="error in errors">{{ error }}</h6>
+                                <div v-for="error in errors">
+                                        <h6 class="text-red-500">{{ error }}</h6>
+                                </div>
                             </p>
 
                             <div>
@@ -36,7 +38,7 @@
 
                                 <div class="row justify-center">
                                     <div>
-                                        <form method="post" @submit.prevent="create">
+                                        <form method="post" @submit.prevent="checkForm()">
                                             <input type="hidden" name="_token" :value="csrf">
 
                                             <div class="form-group">
@@ -51,7 +53,7 @@
                                                 <label>Select a Product</label>
                                                 <select class="form-control mt-2" name="product_id" id="product_id" v-model="formData.product_id">
                                                     <option v-for="product in products" :key="product.id" :value="product.id">
-                                                        {{ product.id }} {{ product.productname }}
+                                                        {{ product.productname }}
                                                     </option>
                                                 </select>
 
@@ -127,7 +129,7 @@
                                         <div v-for="i in products">
                                             <div class="px-3 pb-3" v-if="product.product_id === i.id">
 
-                                                <h4 class="mb-2 text-xl text-center">{{ i.name }}</h4>
+                                                <h4 class="mb-2 text-xl text-center">{{ i.productname }}</h4>
                                                 <p class="mb-2 leading-4 text-center">{{ i.description }}</p>
                                                 <p class="mb-2 leading-4 text-center">${{ i.price }}</p>
                                                 <div>
@@ -193,10 +195,6 @@
                         <button class="btn-lg btn-success">Order Complete</button>
                     </div>
 
-                    <div class="alert alert-danger" role="alert" v-for="error in errors">
-                        {{ error }}
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -226,7 +224,6 @@
                         true
                     ],
                 },
-                // emailData: [],
             }
         },
         created(id) {
@@ -242,13 +239,6 @@
                     alert('cannot load quote Information')
                 });
             },
-            sendEmail() {
-                axios.get(`/email/${this.$route.params.id}`)
-                .then(response => {
-                    this.emailData = response.data;
-                    this.isModalVisible = false;
-                })
-            },
             showModal() {
                 this.isModalVisible = true;
             },
@@ -261,42 +251,35 @@
             closeModalForm() {
                 this.isModalFormVisible = false;
             },
-
-            // destroyQuoteProduct(id) {
-            //     let i = this.sendData.map(item => item.id).indexOf(id);
-            //     this.sendData.splice(i, 1);
-            //     console.log('QuoteProduct deleted', `${id}`);
-            // },
             removeVueProduct(index){
                 this.sendData.splice(index, 1);
             },
 
-            // checkForm(e){
-            //         if (this.quote_id && this.product_id && this.quantity) {
-            //             return true;
-            //         }
-            //
-            //         this.errors = [];
-            //
-            //         if (!this.quote_id) {
-            //             this.errors.push('Quote required.');
-            //         }
-            //         if (!this.product_id) {
-            //             this.errors.push('Product required.');
-            //         }
-            //         if (!this.quantity) {
-            //             this.errors.push('Quantity required.');
-            //         }
-            //
-            //         e.preventDefault();
-            //         this.create();
-            // },
+            checkForm(e){
+                if (this.quote_id && this.product_id && this.quantity) {
+                    return true;
+                }
+
+                this.errors = [];
+
+                if (!this.formData.quote_id) {
+                    this.errors.push('Quote required.');
+                }
+                if (!this.formData.product_id) {
+                    this.errors.push('Product required.');
+                }
+                if (!this.formData.quantity || this.formData.quantity == 0) {
+                    this.errors.push('Quantity required.');
+                }
+
+                if(this.errors.length === 0){
+                    this.create()
+                }
+            },
             create() {
                 this.sendData.push({ ...this.formData });
-                this.formData.quote_id = null;
                 this.formData.product_id = null;
                 this.formData.quantity = "";
-                // this.isModalFormVisible = false;
             },
 
             addDataToDatabase(id){
@@ -308,6 +291,12 @@
                 .catch((error) => this.errors = error.response.data);
 
                 axios.post(`/api/quotes/update/${this.$route.params.id}`, this.complete)
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => this.errors = error.response.data);
+
+                axios.get(`/quotes/send-email/${this.$route.params.id}`)
                 .then((response) => {
                     console.log(response);
                     this.$router.push({name: 'quotes'});
@@ -325,6 +314,14 @@
                     this.products = response.data;
                 })
             },
+            sendCustomerEmail(id){
+                axios.get(`/quotes/send-email/${this.$route.params.id}`)
+                .then((response) => {
+                    console.log(response);
+                    this.$router.push({name: 'quotes'});
+                })
+                .catch((error) => this.errors = error.response.data);
+            }
         },
         mounted() {
             this.getQuote();
@@ -415,11 +412,6 @@
                     }
                 }
 
-                // for (var i = 0; i < this.lengthOfData; i++) {
-                //     let allSubTotals = (((this.sendData[i].price) * (this.sendData[i].quantity)) - ((this.sendData[i].price) * 0.20) * (this.quotes.quoteProduct[i].quantity));
-                //     subTotalArray.push(allSubTotals);
-                // }
-
                 const reducer = (previousValue, currentValue) => previousValue + currentValue;
 
                 let sumOfSubTotals = subTotalArray.reduce(reducer);
@@ -436,11 +428,6 @@
                         }
                     }
                 }
-
-                // for (var i = 0; i < this.lengthOfData; i++) {
-                //     let vatTotals = ((this.sendData[i].price) * 0.20) * (this.sendData[i].quantity);
-                //     vatArray.push(vatTotals);
-                // }
 
                 const reducer = (previousValue, currentValue) => previousValue + currentValue;
 

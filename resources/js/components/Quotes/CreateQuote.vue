@@ -9,12 +9,29 @@
                         <label for="quotename" class="mt-4">Quote Name</label>
                         <input type="text" name="quotename" id="quotename" class="form-control mt-2" v-model="formData.quotename">
 
+                        <div v-if="this.errors !== 0">
+                            <div v-for="error in this.errors.quotename">
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+
                         <label for="customer" class="mt-4">Select a Customer</label>
                         <select class="form-control mt-2" name="customer" v-model="formData.customer_id">
                             <option v-for="customer in customers" :key="customer.id" :value="customer.id">
                                 {{ customer.id }} {{ customer.firstname }} {{ customer.lastname }}
                             </option>
                         </select>
+
+                        <div v-if="this.errors !== 0">
+                            <div v-for="error in this.errors.customer_id">
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-4">Add Quote</button>
@@ -36,7 +53,7 @@ import axios from 'axios';
                     quotename: null,
                     customer_id: null,
                 },
-
+                errors: []
             }
         },
         mounted() {
@@ -63,8 +80,6 @@ import axios from 'axios';
                     if (error.response.status == 422) {
                         this.errors = error.response.data.errors;
                     }
-                    console.log(error.response.data)
-                    console.log(error.response.data.message)
                 });
             },
         }

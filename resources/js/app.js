@@ -22,7 +22,7 @@ Vue.component('quantityCounter', {
     },
     template:
     `<div class="flex flex-row justify-evenly h-10">
-        <button class="btn-sm btn-primary font-lg" @click="$emit('decrement-quantity')" type="button" name="button" v-bind:disabled="quantity<1">-</button>
+        <button class="btn-sm btn-primary font-lg" @click="$emit('decrement-quantity')" type="button" name="button" v-bind:disabled="quantity<2">-</button>
         <input v-model="count" v-on:input="$emit('input', count)" class="form-control mx-2 w-12" >
         <button class="btn-sm btn-primary font-lg" @click="$emit('increment-quantity')" type="button" name="button">+</button>
     </div>`,

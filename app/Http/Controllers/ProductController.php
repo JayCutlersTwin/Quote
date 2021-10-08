@@ -35,6 +35,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'productname' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+        ]);
+
         $product = new Product([
             'productname' => $request->input('productname'),
             'description' => $request->input('description'),
@@ -78,6 +84,13 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
+
+        $this->validate($request, [
+            'productname' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+        ]);
+
         $product->update($request->all());
 
         return response()->json('The book successfully updated');
